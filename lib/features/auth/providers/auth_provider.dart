@@ -46,4 +46,14 @@ class AuthNotifier extends _$AuthNotifier {
     await ref.read(localStorageProvider).clearAll();
     state = const AsyncValue.data(null);
   }
+
+  Future<void> bypass() async {
+    state = AsyncValue.data(User(
+      id: "999",
+      name: "Tester",
+      email: "tester@example.com",
+      createdAt: DateTime.now().toIso8601String(),
+      updatedAt: DateTime.now().toIso8601String(),
+    ));
+  }
 }
