@@ -2,9 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../constant.dart';
 import '../storage/local_storage.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart'; 
 part 'api_client.g.dart';
 
+final dio = Dio(BaseOptions(baseUrl: 'http://[HOST]/api'));
 @riverpod
 ApiClient apiClient(Ref ref) {
   return ApiClient(ref.read(localStorageProvider));
@@ -27,11 +28,12 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = await _storage.getToken();
+          final storage = FlutterSecureStorage();
+          final token = await storage.read(key: 'token');
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }
-          handler.next(options);
+          return handler.next(options);
         },
         onError: (error, handler) async {
           if (error.response?.statusCode == 401) {
