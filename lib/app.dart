@@ -31,23 +31,27 @@ class SinapsisApp extends ConsumerWidget {
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
         seedColor: const Color(0xFF1D9E75),
-        brightness: Brightness.light,
+        brightness: Brightness.dark,
       ),
       fontFamily: 'Inter',
-      scaffoldBackgroundColor: Colors.white,
+      scaffoldBackgroundColor: Colors.black,
       appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white,
-        foregroundColor: Color(0xFF1A1A2E),
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         elevation: 0,
+        centerTitle: true,
         scrolledUnderElevation: 0,
         titleTextStyle: TextStyle(
-          color: Color(0xFF1A1A2E),
+          color: Colors.white,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
       ),
+      cardTheme: const CardThemeData(
+        color: Color(0xFF1A1A1A),
+      ),
       dividerTheme: const DividerThemeData(
-        color: Color(0xFFE5E7EB),
+        color: Color(0xFF2A2A2A),
         thickness: 0.5,
       ),
     );
