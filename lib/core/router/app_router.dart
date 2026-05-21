@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sinapsis_mobile/features/notes/screens/note_view_screen.dart';
 import '../../features/auth/providers/auth_provider.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/register_screen.dart';
@@ -40,8 +41,13 @@ GoRouter router(Ref ref) {
       ),
       GoRoute(
         path: '/notes/:id',
-        builder: (_, state) => NoteEditorScreen(noteId: state.pathParameters['id']!),
+        builder: (_, state) => NoteViewerScreen(noteId: state.pathParameters['id']!),
       ),
+      GoRoute(
+        path: '/notes/edit/:id',
+        builder: (_, state) => NoteEditorScreen(noteId: state.pathParameters['id']!)
+      ),
+      
       GoRoute(path: '/trash', builder: (_, _) => const TrashScreen()),
       GoRoute(
         path: '/notes/:id/study/flashcard',

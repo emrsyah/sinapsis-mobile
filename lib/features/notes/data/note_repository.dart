@@ -18,9 +18,11 @@ class NoteRepository {
     String? folderId,
     String? tagId,
     String? search,
-    bool trash = false,
+    bool trash = false, // Tetap dipertahankan sesuai kode asal
   }) async {
-    final endpoint = trash ? ApiEndpoints.notesTrashed : ApiEndpoints.notes;
+    // UBAHAN DI SINI: Selalu tembak ApiEndpoints.notes agar tidak memicu 404 dari Laravel
+    final endpoint = ApiEndpoints.notes; 
+    
     final data =
         await _api.get(
               endpoint,
@@ -28,6 +30,8 @@ class NoteRepository {
                 if (folderId != null) 'folder_id': folderId,
                 if (tagId != null) 'tag_id': tagId,
                 if (search != null) 'search': search,
+                // UBAHAN DI SINI: Kirim status trash ke query parameters laravel (?trash=1 atau ?trash=0)
+                'trash': trash ? 'true' : 'false',
               },
             )
             as Map<String, dynamic>;

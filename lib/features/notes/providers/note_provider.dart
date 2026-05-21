@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../models/note.dart';
 import '../data/note_repository.dart';
@@ -7,10 +8,10 @@ part 'note_provider.g.dart';
 @riverpod
 class NoteListNotifier extends _$NoteListNotifier {
   @override
-  Future<List<Note>> build({String? folderId, String? tagId}) {
+  FutureOr<List<Note>> build({String? folderId, bool inTrash = false, String? tagId}) {
     return ref
         .read(noteRepositoryProvider)
-        .getNotes(folderId: folderId, tagId: tagId);
+        .getNotes(folderId: folderId, tagId: tagId, trash: inTrash);
   }
 
   Future<void> refresh() async {
@@ -26,8 +27,21 @@ class NoteListNotifier extends _$NoteListNotifier {
     return note;
   }
 
-  Future<void> deleteNote(String id) async {
+  // Masuk ke tempat sampah (Soft Delete)
+  Future<void> trashNote(String id) async {
     await ref.read(noteRepositoryProvider).deleteNote(id);
+    ref.invalidateSelf();
+  }
+
+  // Memulihkan catatan dari tempat sampah
+  Future<void> restoreNote(String id) async {
+    await ref.read(noteRepositoryProvider).restoreNote(id);
+    ref.invalidateSelf();
+  }
+
+  // Hapus permanen dari tempat sampah
+  Future<void> deleteNotePermanently(String id) async {
+    await ref.read(noteRepositoryProvider).forceDeleteNote(id);
     ref.invalidateSelf();
   }
 }

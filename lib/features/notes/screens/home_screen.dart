@@ -17,6 +17,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notesAsync = ref.watch(noteListProvider());
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +46,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
               Expanded(
-                child: notes.isEmpty
+                child: sortedNotes.isEmpty
                     ? const Center(child: Text('No notes yet. Create one!'))
                     : ListView.builder(
                         padding: const EdgeInsets.all(16),
@@ -60,7 +61,13 @@ class HomeScreen extends ConsumerWidget {
                               side: BorderSide(color: Colors.grey.shade800),
                             ),
                             child: InkWell(
-                              onTap: () => context.push('/notes/${note.id}'),
+                              onTap: () async {
+                                // 1. Tunggu proses melihat/mengedit catatan selesai
+                                await context.push('/notes/${note.id}');
+                                
+                                // 2. Begitu menekan tombol kembali, langsung update daftarnya
+                                ref.invalidate(noteListProvider());
+                              },
                               borderRadius: BorderRadius.circular(12),
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
@@ -75,12 +82,19 @@ class HomeScreen extends ConsumerWidget {
                                       ),
                                     ),
                                     const SizedBox(height: 8),
-                                    Text(
-                                      'Last updated: ${DateTime.parse(note.updatedAt).toLocal().toString().split('.')[0]}',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey.shade400,
-                                      ),
+                                    Builder(
+                                      builder: (_) {
+                                        final updatedAt = DateTime.parse(note.updatedAt);
+                                        final updatedStr = updatedAt.toLocal().toString().split('.')[0];
+
+                                        return Text(
+                                          'Last updated: $updatedStr',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey.shade400,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -96,8 +110,24 @@ class HomeScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final note = await ref.read(noteListProvider().notifier).createNote();
-          if (context.mounted) context.push('/notes/${note.id}');
+          try {
+            // 1. Buat catatan baru kosong di backend
+            final note = await ref.read(noteListProvider().notifier).createNote();
+            
+            if (context.mounted) {
+              // 2. Tunggu proses pengisian catatan di halaman editor sampai selesai
+              await context.push('/notes/edit/${note.id}');
+              
+              // 3. Begitu kembali dari halaman editor, segarkan list catatan di home screen
+              ref.invalidate(noteListProvider());
+            }
+          } catch (e) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Gagal membuat catatan: $e')),
+              );
+            }
+          }
         },
         child: const Icon(Icons.add),
       ),
