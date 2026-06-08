@@ -2,11 +2,12 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   // Auth
-  static const String register = '/auth/register';
-  static const String login = '/auth/login';
   static const String logout = '/auth/logout';
   static const String me = '/auth/me';
   static const String lastOpened = '/auth/me/last-opened';
+
+  // Google OAuth (webview redirect URL)
+  static String googleLogin(String baseUrl) => '$baseUrl/v1/auth/login';
 
   // Notes
   static const String notes = '/notes';

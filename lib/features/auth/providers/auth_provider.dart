@@ -12,48 +12,29 @@ class AuthNotifier extends _$AuthNotifier {
     final storage = ref.read(localStorageProvider);
     final token = await storage.getToken();
     if (token == null) return null;
-    return ref.read(authRepositoryProvider).getMe();
+    try {
+      return await ref.read(authRepositoryProvider).getMe();
+    } catch (_) {
+      await storage.clearAll();
+      return null;
+    }
   }
 
-  Future<void> login(String email, String password) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final result = await ref
-          .read(authRepositoryProvider)
-          .login(email: email, password: password);
-      final storage = ref.read(localStorageProvider);
-      await storage.saveToken(result.token);
-      await storage.saveUserId(result.user.id);
-      return result.user;
-    });
-  }
-
-  Future<void> register(String name, String email, String password) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final result = await ref
-          .read(authRepositoryProvider)
-          .register(name: name, email: email, password: password);
-      final storage = ref.read(localStorageProvider);
-      await storage.saveToken(result.token);
-      await storage.saveUserId(result.user.id);
-      return result.user;
-    });
+  Future<void> setAuthenticated(String token, User user) async {
+    final storage = ref.read(localStorageProvider);
+    await storage.saveToken(token);
+    await storage.saveUserId(user.id);
+    await storage.saveUserName(user.name);
+    state = AsyncValue.data(user);
   }
 
   Future<void> logout() async {
-    await ref.read(authRepositoryProvider).logout();
+    try {
+      await ref.read(authRepositoryProvider).logout();
+    } catch (_) {
+      // Ignore network errors on logout
+    }
     await ref.read(localStorageProvider).clearAll();
     state = const AsyncValue.data(null);
-  }
-
-  Future<void> bypass() async {
-    state = AsyncValue.data(User(
-      id: "999",
-      name: "Tester",
-      email: "tester@example.com",
-      createdAt: DateTime.now().toIso8601String(),
-      updatedAt: DateTime.now().toIso8601String(),
-    ));
   }
 }

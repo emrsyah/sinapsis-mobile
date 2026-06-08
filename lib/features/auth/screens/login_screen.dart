@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/auth_provider.dart';
+import 'google_auth_screen.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.read(authProvider.notifier);
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -48,25 +46,26 @@ class LoginScreen extends ConsumerWidget {
                 style: TextStyle(color: Colors.grey),
               ),
               const Spacer(),
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: () {
-                  // TODO: Real login
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const GoogleAuthScreen(),
+                    ),
+                  );
                 },
+                icon: Image.asset(
+                  'assets/google_logo.png',
+                  height: 24,
+                  errorBuilder: (_, __, ___) =>
+                      const Icon(Icons.login, size: 24),
+                ),
+                label: const Text('Continue with Google'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black87,
                 ),
-                child: const Text('Sign In'),
-              ),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: () async {
-                  await auth.bypass();
-                  // No need to context.go('/') because the router
-                  // automatically redirects when the auth state changes.
-                },
-                child: const Text('DEV: Bypass to Main Page'),
               ),
               const SizedBox(height: 48),
             ],
