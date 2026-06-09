@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$User {
 
- String get id; String get name; String get email;@JsonKey(name: 'avatar_url') String? get avatarUrl;@JsonKey(name: 'last_opened_note_id') String? get lastOpenedNoteId;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt;
+@JsonKey(name: 'user_id') String get id; String get name; String get email;@JsonKey(name: 'image') String? get avatarUrl;@JsonKey(name: 'last_opened_note_id') String? get lastOpenedNoteId;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt;
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String email,@JsonKey(name: 'avatar_url') String? avatarUrl,@JsonKey(name: 'last_opened_note_id') String? lastOpenedNoteId,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
+@JsonKey(name: 'user_id') String id, String name, String email,@JsonKey(name: 'image') String? avatarUrl,@JsonKey(name: 'last_opened_note_id') String? lastOpenedNoteId,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
 });
 
 
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String email, @JsonKey(name: 'avatar_url')  String? avatarUrl, @JsonKey(name: 'last_opened_note_id')  String? lastOpenedNoteId, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String id,  String name,  String email, @JsonKey(name: 'image')  String? avatarUrl, @JsonKey(name: 'last_opened_note_id')  String? lastOpenedNoteId, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
 return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.lastOpenedNoteId,_that.createdAt,_that.updatedAt);case _:
@@ -180,7 +180,7 @@ return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.lastOpened
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String email, @JsonKey(name: 'avatar_url')  String? avatarUrl, @JsonKey(name: 'last_opened_note_id')  String? lastOpenedNoteId, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String id,  String name,  String email, @JsonKey(name: 'image')  String? avatarUrl, @JsonKey(name: 'last_opened_note_id')  String? lastOpenedNoteId, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _User():
 return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.lastOpenedNoteId,_that.createdAt,_that.updatedAt);case _:
@@ -200,7 +200,7 @@ return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.lastOpened
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String email, @JsonKey(name: 'avatar_url')  String? avatarUrl, @JsonKey(name: 'last_opened_note_id')  String? lastOpenedNoteId, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'user_id')  String id,  String name,  String email, @JsonKey(name: 'image')  String? avatarUrl, @JsonKey(name: 'last_opened_note_id')  String? lastOpenedNoteId, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
 return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.lastOpenedNoteId,_that.createdAt,_that.updatedAt);case _:
@@ -215,13 +215,13 @@ return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.lastOpened
 @JsonSerializable()
 
 class _User implements User {
-  const _User({required this.id, required this.name, required this.email, @JsonKey(name: 'avatar_url') this.avatarUrl, @JsonKey(name: 'last_opened_note_id') this.lastOpenedNoteId, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
+  const _User({@JsonKey(name: 'user_id') required this.id, required this.name, required this.email, @JsonKey(name: 'image') this.avatarUrl, @JsonKey(name: 'last_opened_note_id') this.lastOpenedNoteId, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
   factory _User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-@override final  String id;
+@override@JsonKey(name: 'user_id') final  String id;
 @override final  String name;
 @override final  String email;
-@override@JsonKey(name: 'avatar_url') final  String? avatarUrl;
+@override@JsonKey(name: 'image') final  String? avatarUrl;
 @override@JsonKey(name: 'last_opened_note_id') final  String? lastOpenedNoteId;
 @override@JsonKey(name: 'created_at') final  String createdAt;
 @override@JsonKey(name: 'updated_at') final  String updatedAt;
@@ -259,7 +259,7 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String email,@JsonKey(name: 'avatar_url') String? avatarUrl,@JsonKey(name: 'last_opened_note_id') String? lastOpenedNoteId,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
+@JsonKey(name: 'user_id') String id, String name, String email,@JsonKey(name: 'image') String? avatarUrl,@JsonKey(name: 'last_opened_note_id') String? lastOpenedNoteId,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
 });
 
 

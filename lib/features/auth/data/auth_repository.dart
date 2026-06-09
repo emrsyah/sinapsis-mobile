@@ -16,7 +16,15 @@ class AuthRepository {
 
   Future<User> getMe() async {
     final data = await _api.get(ApiEndpoints.me) as Map<String, dynamic>;
-    return User.fromJson(data['data'] as Map<String, dynamic>);
+    return User.fromJson(data);
+  }
+
+  /// Exchanges a Google ID token for a Sanctum API token.
+  Future<String> exchangeGoogleIdToken(String idToken) async {
+    final data =
+        await _api.post(ApiEndpoints.googleToken, body: {'id_token': idToken})
+            as Map<String, dynamic>;
+    return data['token'] as String;
   }
 
   Future<void> logout() async {

@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'google_auth_screen.dart';
+import '../providers/auth_provider.dart';
 
-class LoginScreen extends ConsumerWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  bool _isLoading = false;
+
+  Future<void> _handleSignIn() async {
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authProvider.notifier).signInWithGoogle();
+      // On success the router redirect sends us to the home screen.
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign-in failed: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -47,20 +69,20 @@ class LoginScreen extends ConsumerWidget {
               ),
               const Spacer(),
               ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const GoogleAuthScreen(),
-                    ),
-                  );
-                },
-                icon: Image.asset(
-                  'assets/google_logo.png',
-                  height: 24,
-                  errorBuilder: (_, __, ___) =>
-                      const Icon(Icons.login, size: 24),
-                ),
-                label: const Text('Continue with Google'),
+                onPressed: _isLoading ? null : _handleSignIn,
+                icon: _isLoading
+                    ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Image.asset(
+                        'assets/google_logo.png',
+                        height: 24,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.login, size: 24),
+                      ),
+                label: Text(_isLoading ? 'Signing in...' : 'Continue with Google'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   backgroundColor: Colors.white,

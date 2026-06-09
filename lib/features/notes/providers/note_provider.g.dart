@@ -16,7 +16,7 @@ final class NoteListNotifierProvider
     extends $AsyncNotifierProvider<NoteListNotifier, List<Note>> {
   NoteListNotifierProvider._({
     required NoteListNotifierFamily super.from,
-    required ({String? folderId, String? tagId, bool inTrash}) super.argument,
+    required ({String? folderId, bool inTrash, String? tagId}) super.argument,
   }) : super(
          retry: null,
          name: r'noteListProvider',
@@ -50,7 +50,7 @@ final class NoteListNotifierProvider
   }
 }
 
-String _$noteListNotifierHash() => r'4518acbb34c9d86281bb1e54cfa6871f983d32e6';
+String _$noteListNotifierHash() => r'3a6613885f5a388d1d482b1986ac576421b584ea';
 
 final class NoteListNotifierFamily extends $Family
     with
@@ -59,7 +59,7 @@ final class NoteListNotifierFamily extends $Family
           AsyncValue<List<Note>>,
           List<Note>,
           FutureOr<List<Note>>,
-          ({String? folderId, String? tagId, bool inTrash})
+          ({String? folderId, bool inTrash, String? tagId})
         > {
   NoteListNotifierFamily._()
     : super(
@@ -72,10 +72,10 @@ final class NoteListNotifierFamily extends $Family
 
   NoteListNotifierProvider call({
     String? folderId,
-    String? tagId,
     bool inTrash = false,
+    String? tagId,
   }) => NoteListNotifierProvider._(
-    argument: (folderId: folderId, tagId: tagId, inTrash: inTrash),
+    argument: (folderId: folderId, inTrash: inTrash, tagId: tagId),
     from: this,
   );
 
@@ -85,15 +85,15 @@ final class NoteListNotifierFamily extends $Family
 
 abstract class _$NoteListNotifier extends $AsyncNotifier<List<Note>> {
   late final _$args =
-      ref.$arg as ({String? folderId, String? tagId, bool inTrash});
+      ref.$arg as ({String? folderId, bool inTrash, String? tagId});
   String? get folderId => _$args.folderId;
-  String? get tagId => _$args.tagId;
   bool get inTrash => _$args.inTrash;
+  String? get tagId => _$args.tagId;
 
   FutureOr<List<Note>> build({
     String? folderId,
-    String? tagId,
     bool inTrash = false,
+    String? tagId,
   });
   @$mustCallSuper
   @override
@@ -111,8 +111,8 @@ abstract class _$NoteListNotifier extends $AsyncNotifier<List<Note>> {
       ref,
       () => build(
         folderId: _$args.folderId,
-        tagId: _$args.tagId,
         inTrash: _$args.inTrash,
+        tagId: _$args.tagId,
       ),
     );
   }

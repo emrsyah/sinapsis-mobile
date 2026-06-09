@@ -6,8 +6,8 @@ class ApiEndpoints {
   static const String me = '/auth/me';
   static const String lastOpened = '/auth/me/last-opened';
 
-  // Google OAuth (webview redirect URL)
-  static String googleLogin(String baseUrl) => '$baseUrl/v1/auth/login';
+  // Native Google sign-in: exchange a Google ID token for a Sanctum token.
+  static const String googleToken = '/auth/google/token';
 
   // Notes
   static const String notes = '/notes';

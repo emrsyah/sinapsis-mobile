@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'google_auth_screen.dart';
+import '../providers/auth_provider.dart';
 
-class RegisterScreen extends ConsumerWidget {
+class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  bool _isLoading = false;
+
+  Future<void> _handleSignIn() async {
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authProvider.notifier).signInWithGoogle();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign-up failed: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Create account')),
       body: SafeArea(
@@ -29,15 +50,15 @@ class RegisterScreen extends ConsumerWidget {
               ),
               const Spacer(),
               ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const GoogleAuthScreen(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.login, size: 24),
-                label: const Text('Sign up with Google'),
+                onPressed: _isLoading ? null : _handleSignIn,
+                icon: _isLoading
+                    ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.login, size: 24),
+                label: Text(_isLoading ? 'Signing up...' : 'Sign up with Google'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   backgroundColor: Colors.white,

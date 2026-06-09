@@ -14,4 +14,13 @@ class AppConstants {
 
   static String get uploadthingApiKey =>
       dotenv.env['UPLOADTHING_API_KEY'] ?? '';
+
+  /// Web OAuth client ID, passed to Google Sign-In as `serverClientId` so the
+  /// issued ID token is audience-bound to the backend.
+  static String get googleServerClientId =>
+      dotenv.env['GOOGLE_SERVER_CLIENT_ID'] ?? '';
+
+  /// iOS OAuth client ID, passed as `clientId` on iOS builds (empty elsewhere).
+  static String get googleIosClientId =>
+      dotenv.env['GOOGLE_IOS_CLIENT_ID'] ?? '';
 }
