@@ -11,6 +11,7 @@ import '../../features/notes/screens/home_screen.dart';
 import '../../features/study/screens/flashcard_screen.dart';
 import '../../features/study/screens/quiz_screen.dart';
 import '../../features/study/screens/mindmap_screen.dart';
+import '../../features/tags/screens/tag_manage_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -49,6 +50,14 @@ GoRouter router(Ref ref) {
       ),
       
       GoRoute(path: '/trash', builder: (_, _) => const TrashScreen()),
+      GoRoute(path: '/tags', builder: (_, _) => const TagManageScreen()),
+      GoRoute(
+        path: '/tags/:id',
+        builder: (_, state) => NoteListScreen(
+          tagId: state.pathParameters['id'],
+          title: 'Tagged Notes',
+        ),
+      ),
       GoRoute(
         path: '/notes/:id/study/flashcard',
         builder: (_, state) => FlashcardScreen(

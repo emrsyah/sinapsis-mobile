@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // 1. Import file provider asli kamu (sesuaikan path foldernya)
-import '../providers/note_provider.dart'; 
-import 'note_editor_screen.dart'; 
+import '../providers/note_provider.dart';
+import 'note_editor_screen.dart';
+import '../../tags/widgets/tag_chip.dart';
+import '../../tags/widgets/tag_selector_sheet.dart';
 
 class NoteViewerScreen extends ConsumerStatefulWidget {
   final String noteId;
@@ -93,6 +95,15 @@ class _NoteViewerScreenState extends ConsumerState<NoteViewerScreen> {
             
             actions: [
               IconButton(
+                icon: const Icon(Icons.label_outline),
+                tooltip: 'Manage Tags',
+                onPressed: () => TagSelectorSheet.show(
+                  context,
+                  noteId: note.id,
+                  attached: note.tags,
+                ),
+              ),
+              IconButton(
             icon: const Icon(Icons.delete_outline),
             tooltip: 'Pindahkan ke Sampah',
             onPressed: () async {
@@ -152,6 +163,16 @@ class _NoteViewerScreenState extends ConsumerState<NoteViewerScreen> {
                   _loadedTitle ?? note.title,
                   style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                 ),
+                if (note.tags.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    children: note.tags
+                        .map((t) => TagChip(tag: t))
+                        .toList(),
+                  ),
+                ],
                 const SizedBox(height: 8),
                 const Divider(thickness: 1),
                 const SizedBox(height: 8),

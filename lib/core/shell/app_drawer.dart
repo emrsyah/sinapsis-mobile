@@ -94,6 +94,15 @@ class AppDrawer extends ConsumerWidget {
                   ),
                 ),
                 ListTile(
+                  leading: const Icon(Icons.label_outline),
+                  title: const Text('Tags'),
+                  selected: currentLocation.startsWith('/tags'),
+                  onTap: () {
+                    context.go('/tags');
+                    Navigator.pop(context); // Close drawer
+                  },
+                ),
+                ListTile(
                   leading: const Icon(Icons.delete_outline),
                   title: const Text('Trash'),
                   selected: currentLocation == '/trash',

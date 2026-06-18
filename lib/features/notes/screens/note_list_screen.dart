@@ -7,15 +7,18 @@ import '../../../core/shell/app_drawer.dart';
 
 class NoteListScreen extends ConsumerWidget {
   final String? folderId;
+  final String? tagId;
+  final String? title;
 
-  const NoteListScreen({super.key, this.folderId});
+  const NoteListScreen({super.key, this.folderId, this.tagId, this.title});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notesAsync = ref.watch(noteListProvider(folderId: folderId));
-    
+    final notesAsync =
+        ref.watch(noteListProvider(folderId: folderId, tagId: tagId));
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Notes')),
+      appBar: AppBar(title: Text(title ?? 'Notes')),
       drawer: const AppDrawer(),
       body: notesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -34,15 +37,15 @@ class NoteListScreen extends ConsumerWidget {
         onPressed: () async {
           try {
             final note = await ref
-                .read(noteListProvider(folderId: folderId).notifier)
+                .read(noteListProvider(folderId: folderId, tagId: tagId).notifier)
                 .createNote(folderId: folderId);
-                
+
             if (context.mounted) {
               // 1. Tunggu sampai user selesai mengisi catatan baru
               await context.push('/notes/edit/${note.id}');
-              
+
               // 2. Segera refresh list folder begitu user kembali
-              ref.invalidate(noteListProvider(folderId: folderId));
+              ref.invalidate(noteListProvider(folderId: folderId, tagId: tagId));
             }
           } catch (e) {
             // Handle error
