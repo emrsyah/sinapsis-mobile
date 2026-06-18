@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 // 1. Import file provider asli kamu (sesuaikan path foldernya)
 import '../providers/note_provider.dart';
 import 'note_editor_screen.dart';
@@ -94,6 +95,17 @@ class _NoteViewerScreenState extends ConsumerState<NoteViewerScreen> {
             title: const Text('View Note'),
             
             actions: [
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.school_outlined),
+                tooltip: 'Study Tools',
+                onSelected: (value) =>
+                    context.push('/notes/${note.id}/study/$value'),
+                itemBuilder: (_) => const [
+                  PopupMenuItem(value: 'flashcard', child: Text('Flashcards')),
+                  PopupMenuItem(value: 'quiz', child: Text('Quiz')),
+                  PopupMenuItem(value: 'mindmap', child: Text('Mind Map')),
+                ],
+              ),
               IconButton(
                 icon: const Icon(Icons.label_outline),
                 tooltip: 'Manage Tags',

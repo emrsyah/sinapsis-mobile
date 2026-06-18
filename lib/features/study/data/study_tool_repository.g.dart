@@ -55,4 +55,4 @@ final class StudyToolRepositoryProvider
 }
 
 String _$studyToolRepositoryHash() =>
-    r'2a0244eea8e7b5743c2d9d9bba7bce535659bae5';
+    r'f829f636c4ddb3ee861fc6a4af8ae9c5702937d0';

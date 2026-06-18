@@ -48,6 +48,15 @@ class AppDrawer extends ConsumerWidget {
                     Navigator.pop(context); // Close drawer
                   },
                 ),
+                ListTile(
+                  leading: const Icon(Icons.search),
+                  title: const Text('Search'),
+                  selected: currentLocation == '/search',
+                  onTap: () {
+                    context.go('/search');
+                    Navigator.pop(context); // Close drawer
+                  },
+                ),
                 Theme(
                   data: Theme.of(context).copyWith(
                     dividerColor: Colors.transparent, // Remove line on expansion tile

@@ -6,6 +6,13 @@ class AppConstants {
   static String get apiBaseUrl =>
       dotenv.env['API_BASE_URL'] ?? 'https://api.sinapsis.app';
 
+  /// Next.js base URL that hosts the AI generation route handlers
+  /// (`/api/ai/flashcard|quiz|mindmap`). Separate from [apiBaseUrl] (Laravel).
+  /// Note: on an Android emulator use `http://10.0.2.2:3000` to reach the host's
+  /// localhost; a physical device needs the host machine's LAN IP.
+  static String get aiBaseUrl =>
+      dotenv.env['AI_BASE_URL'] ?? 'http://localhost:3000';
+
   static String get reverbWsUrl =>
       dotenv.env['REVERB_WS_URL'] ?? 'wss://api.sinapsis.app';
 

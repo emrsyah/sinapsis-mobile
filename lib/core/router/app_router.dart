@@ -8,6 +8,7 @@ import '../../features/notes/screens/note_list_screen.dart';
 import '../../features/notes/screens/note_editor_screen.dart';
 import '../../features/notes/screens/trash_screen.dart';
 import '../../features/notes/screens/home_screen.dart';
+import '../../features/notes/screens/search_screen.dart';
 import '../../features/study/screens/flashcard_screen.dart';
 import '../../features/study/screens/quiz_screen.dart';
 import '../../features/study/screens/mindmap_screen.dart';
@@ -50,6 +51,7 @@ GoRouter router(Ref ref) {
       ),
       
       GoRoute(path: '/trash', builder: (_, _) => const TrashScreen()),
+      GoRoute(path: '/search', builder: (_, _) => const SearchScreen()),
       GoRoute(path: '/tags', builder: (_, _) => const TagManageScreen()),
       GoRoute(
         path: '/tags/:id',

@@ -110,7 +110,13 @@ model exists (`lib/models/tag.dart`). Only provider + UI missing.
 
 ---
 
-### Phase 2 — Search (small, high utility)
+### Phase 2 — Search (small, high utility) ✅ DONE (2026-06-18)
+
+> Implemented: `search_provider.dart` (`searchNotesProvider` family, blank-query
+> short-circuit), `search_screen.dart` (debounced 350ms search field, tag chips
+> in results); route `/search`; drawer entry; home AppBar search icon.
+> Codegen + `flutter analyze` clean.
+
 
 **Files to create:**
 - `lib/features/notes/screens/search_screen.dart` — search field + debounced results list
@@ -125,7 +131,34 @@ model exists (`lib/models/tag.dart`). Only provider + UI missing.
 
 ---
 
-### Phase 3 — Study Tools UI (highest user value)
+### Phase 3 — Study Tools UI (highest user value) ✅ DONE (2026-06-18)
+
+> **Architecture decision:** generation stays where the web does it — the Next.js
+> `/api/ai/<type>` route handlers (hold the OpenRouter key). Flow is synchronous
+> (no polling): mobile sends note plain-text → Next.js returns content → mobile
+> saves to Laravel `POST /notes/:id/study-tools` with `status: completed`.
+> Auth on the AI routes deferred per user (localhost dev).
+>
+> Implemented:
+> - Config: `AI_BASE_URL` (`AppConstants.aiBaseUrl`, default `http://localhost:3000`)
+>   in `.env`/`.env.example` + `constant.dart` (emulator note: `10.0.2.2`)
+> - `ai_client.dart` — Dio client for `/api/ai/<type>`, 90s receive timeout
+> - `core/editor/note_text.dart` — `noteContentToPlainText()` handles both Quill
+>   Delta JSON and HTML (ties into §6 editor caveat)
+> - `study_tool_repository.dart` — `generateAndSave()` (AI → Laravel persist)
+> - `generation_options_sheet.dart` — per-type options (amount/answerStyle/
+>   difficulty/branchCount/depth/focus), mirrors web
+> - `study_tool_view.dart` — shared scaffold: fetch latest, generate flow,
+>   loading/empty states
+> - Screens implemented: `flashcard_screen.dart` (PageView flip cards),
+>   `quiz_screen.dart` (MCQ + scoring + retry + explanations),
+>   `mindmap_screen.dart` (expandable tree)
+> - Entry point: Study Tools popup menu in `note_view_screen.dart` (routes existed)
+>
+> Codegen + `flutter analyze` clean.
+> **Note:** AI routes have no auth (user opted to defer); add before prod. Mind
+> map is a tree, not a graph (graphview deferred).
+
 
 **Decision required first:** *Who generates content?*
 - Web generates client-side via OpenRouter (`/api/ai/*`) then POSTs the record.
