@@ -108,6 +108,12 @@ class _NoteViewerScreenState extends ConsumerState<NoteViewerScreen> {
                 ],
               ),
               IconButton(
+                icon: const Icon(Icons.attach_file),
+                tooltip: 'Attachments',
+                onPressed: () =>
+                    context.push('/notes/${note.id}/attachments'),
+              ),
+              IconButton(
                 icon: Icon(
                   note.isPublished ? Icons.public : Icons.ios_share,
                 ),

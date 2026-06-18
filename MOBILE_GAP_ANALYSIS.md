@@ -232,7 +232,21 @@ backend dependency.*
 
 ---
 
-### Phase 5 — Attachments
+### Phase 5 — Attachments ✅ DONE (2026-06-18)
+
+> Implemented:
+> - Deps added: `file_picker`, `url_launcher`
+> - `api_client.dart` — `upload()` multipart helper (Dio `FormData`, field `file`,
+>   auth interceptor applies)
+> - `attachment_repository.dart` — get/upload/delete
+> - `attachment_provider.dart` — `AttachmentListNotifier` family (→ provider name
+>   `attachmentListProvider`)
+> - `attachments_screen.dart` — list (type icon + size), upload via file picker,
+>   delete w/ confirm, tap to open via `url_launcher`
+> - Route `/notes/:id/attachments`; attach-file button in `note_view_screen.dart`
+>
+> Codegen + `flutter analyze` clean.
+
 
 **Files to create:**
 - `lib/features/attachments/data/attachment_repository.dart` —

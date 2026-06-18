@@ -14,6 +14,7 @@ import '../../features/study/screens/quiz_screen.dart';
 import '../../features/study/screens/mindmap_screen.dart';
 import '../../features/tags/screens/tag_manage_screen.dart';
 import '../../features/sharing/screens/shared_note_screen.dart';
+import '../../features/attachments/screens/attachments_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -54,6 +55,11 @@ GoRouter router(Ref ref) {
         builder: (_, state) => NoteEditorScreen(noteId: state.pathParameters['id']!)
       ),
       
+      GoRoute(
+        path: '/notes/:id/attachments',
+        builder: (_, state) =>
+            AttachmentsScreen(noteId: state.pathParameters['id']!),
+      ),
       GoRoute(path: '/trash', builder: (_, _) => const TrashScreen()),
       GoRoute(path: '/search', builder: (_, _) => const SearchScreen()),
       GoRoute(

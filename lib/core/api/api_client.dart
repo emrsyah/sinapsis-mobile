@@ -66,4 +66,19 @@ class ApiClient {
   Future<void> delete(String path) async {
     await _dio.delete(path);
   }
+
+  /// Multipart upload. Sends [filePath] under the form field [field] (default
+  /// 'file'); the auth interceptor attaches the bearer token automatically.
+  Future<dynamic> upload(
+    String path,
+    String filePath, {
+    String? fileName,
+    String field = 'file',
+  }) async {
+    final formData = FormData.fromMap({
+      field: await MultipartFile.fromFile(filePath, filename: fileName),
+    });
+    final res = await _dio.post(path, data: formData);
+    return res.data;
+  }
 }
