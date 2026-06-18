@@ -13,6 +13,7 @@ import '../../features/study/screens/flashcard_screen.dart';
 import '../../features/study/screens/quiz_screen.dart';
 import '../../features/study/screens/mindmap_screen.dart';
 import '../../features/tags/screens/tag_manage_screen.dart';
+import '../../features/sharing/screens/shared_note_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -28,7 +29,10 @@ GoRouter router(Ref ref) {
       final isAuthRoute =
           state.matchedLocation == '/login' ||
           state.matchedLocation == '/register';
+      // Public routes accessible without authentication.
+      final isPublicRoute = state.matchedLocation.startsWith('/shared/');
 
+      if (isPublicRoute) return null;
       if (!isLoggedIn && !isAuthRoute) return '/login';
       if (isLoggedIn && isAuthRoute) return '/';
       return null;
@@ -52,6 +56,11 @@ GoRouter router(Ref ref) {
       
       GoRoute(path: '/trash', builder: (_, _) => const TrashScreen()),
       GoRoute(path: '/search', builder: (_, _) => const SearchScreen()),
+      GoRoute(
+        path: '/shared/:token',
+        builder: (_, state) =>
+            SharedNoteScreen(token: state.pathParameters['token']!),
+      ),
       GoRoute(path: '/tags', builder: (_, _) => const TagManageScreen()),
       GoRoute(
         path: '/tags/:id',

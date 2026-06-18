@@ -13,6 +13,11 @@ class AppConstants {
   static String get aiBaseUrl =>
       dotenv.env['AI_BASE_URL'] ?? 'http://localhost:3000';
 
+  /// Public web app origin used to build shareable note links
+  /// (`<webBaseUrl>/shared/<token>`). Same Next.js app as [aiBaseUrl].
+  static String get webBaseUrl =>
+      dotenv.env['WEB_BASE_URL'] ?? 'http://localhost:3000';
+
   static String get reverbWsUrl =>
       dotenv.env['REVERB_WS_URL'] ?? 'wss://api.sinapsis.app';
 

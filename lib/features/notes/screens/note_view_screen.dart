@@ -8,6 +8,7 @@ import '../providers/note_provider.dart';
 import 'note_editor_screen.dart';
 import '../../tags/widgets/tag_chip.dart';
 import '../../tags/widgets/tag_selector_sheet.dart';
+import '../../sharing/widgets/share_sheet.dart';
 
 class NoteViewerScreen extends ConsumerStatefulWidget {
   final String noteId;
@@ -105,6 +106,13 @@ class _NoteViewerScreenState extends ConsumerState<NoteViewerScreen> {
                   PopupMenuItem(value: 'quiz', child: Text('Quiz')),
                   PopupMenuItem(value: 'mindmap', child: Text('Mind Map')),
                 ],
+              ),
+              IconButton(
+                icon: Icon(
+                  note.isPublished ? Icons.public : Icons.ios_share,
+                ),
+                tooltip: 'Share',
+                onPressed: () => ShareSheet.show(context, note),
               ),
               IconButton(
                 icon: const Icon(Icons.label_outline),

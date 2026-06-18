@@ -195,7 +195,24 @@ backend dependency.*
 
 ---
 
-### Phase 4 — Sharing / Publish
+### Phase 4 — Sharing / Publish ✅ DONE (2026-06-18)
+
+> Implemented:
+> - Config: `WEB_BASE_URL` (`AppConstants.webBaseUrl`, default `localhost:3000`)
+>   for building `<webBaseUrl>/shared/<token>` links
+> - `sharing_repository.dart` — `publish` (returns Note w/ token), `unpublish`,
+>   `getShared(token)`
+> - `sharing_provider.dart` — `SharingController` (publish/unpublish + invalidate
+>   noteDetail), `sharedNoteProvider(token)`
+> - `share_sheet.dart` — publish toggle + link display + copy-to-clipboard
+> - `shared_note_screen.dart` — public read-only viewer (renders Quill Delta, or
+>   plain-text fallback for HTML)
+> - Router: public `/shared/:token` route + auth-guard bypass for `/shared/`
+> - `note_view_screen.dart` — Share button (public/ios_share icon by state)
+>
+> Codegen + `flutter analyze` clean. Share links point at the web app (it owns
+> the canonical public page); the in-app `/shared/:token` viewer is for deep links.
+
 
 **Files to create:**
 - `lib/features/sharing/data/sharing_repository.dart` —
