@@ -12,6 +12,7 @@ abstract class Note with _$Note {
     @JsonKey(name: 'folder_id') String? folderId,
     required String title,
     String? content,
+    @JsonKey(name: 'is_pinned') @Default(false) bool isPinned,
     @JsonKey(name: 'is_published') @Default(false) bool isPublished,
     @JsonKey(name: 'share_token') String? shareToken,
     @JsonKey(name: 'deleted_at') String? deletedAt,

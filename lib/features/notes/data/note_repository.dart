@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
+import '../../../core/api/api_parse.dart';
 import '../../../models/note.dart';
 
 part 'note_repository.g.dart';
@@ -33,34 +34,29 @@ class NoteRepository {
                 // UBAHAN DI SINI: Kirim status trash ke query parameters laravel (?trash=1 atau ?trash=0)
                 'trash': trash ? 'true' : 'false',
               },
-            )
-            as Map<String, dynamic>;
-    return (data['data'] as List)
+            );
+    return dataList(data)
         .map((e) => Note.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 
   Future<Note> getNote(String id) async {
-    final data =
-        await _api.get(
-              ApiEndpoints.note(id),
-              params: {'include': 'tags,backlinks'},
-            )
-            as Map<String, dynamic>;
-    return Note.fromJson(data['data'] as Map<String, dynamic>);
+    final data = await _api.get(
+      ApiEndpoints.note(id),
+      params: {'include': 'tags,backlinks'},
+    );
+    return Note.fromJson(dataMap(data));
   }
 
   Future<Note> createNote({String title = 'Untitled', String? folderId}) async {
-    final data =
-        await _api.post(
-              ApiEndpoints.notes,
-              body: {
-                'title': title,
-                if (folderId != null) 'folder_id': folderId,
-              },
-            )
-            as Map<String, dynamic>;
-    return Note.fromJson(data['data'] as Map<String, dynamic>);
+    final data = await _api.post(
+      ApiEndpoints.notes,
+      body: {
+        'title': title,
+        if (folderId != null) 'folder_id': folderId,
+      },
+    );
+    return Note.fromJson(dataMap(data));
   }
 
   Future<Note> updateNote(
@@ -69,17 +65,15 @@ class NoteRepository {
     String? content,
     String? folderId,
   }) async {
-    final data =
-        await _api.patch(
-              ApiEndpoints.note(id),
-              body: {
-                if (title != null) 'title': title,
-                if (content != null) 'content': content,
-                if (folderId != null) 'folder_id': folderId,
-              },
-            )
-            as Map<String, dynamic>;
-    return Note.fromJson(data['data'] as Map<String, dynamic>);
+    final data = await _api.patch(
+      ApiEndpoints.note(id),
+      body: {
+        if (title != null) 'title': title,
+        if (content != null) 'content': content,
+        if (folderId != null) 'folder_id': folderId,
+      },
+    );
+    return Note.fromJson(dataMap(data));
   }
 
   Future<void> deleteNote(String id) async {
@@ -87,10 +81,8 @@ class NoteRepository {
   }
 
   Future<Note> restoreNote(String id) async {
-    final data =
-        await _api.patch(ApiEndpoints.noteRestore(id), body: {})
-            as Map<String, dynamic>;
-    return Note.fromJson(data['data'] as Map<String, dynamic>);
+    final data = await _api.patch(ApiEndpoints.noteRestore(id), body: {});
+    return Note.fromJson(dataMap(data));
   }
 
   Future<void> forceDeleteNote(String id) async {

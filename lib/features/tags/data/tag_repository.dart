@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
+import '../../../core/api/api_parse.dart';
 import '../../../models/tag.dart';
 
 part 'tag_repository.g.dart';
@@ -15,20 +16,18 @@ class TagRepository {
   TagRepository(this._api);
 
   Future<List<Tag>> getTags() async {
-    final data = await _api.get(ApiEndpoints.tags) as Map<String, dynamic>;
-    return (data['data'] as List)
+    final data = await _api.get(ApiEndpoints.tags);
+    return dataList(data)
         .map((e) => Tag.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 
   Future<Tag> createTag(String name, {String? color}) async {
-    final data =
-        await _api.post(
-              ApiEndpoints.tags,
-              body: {'name': name, if (color != null) 'color': color},
-            )
-            as Map<String, dynamic>;
-    return Tag.fromJson(data['data'] as Map<String, dynamic>);
+    final data = await _api.post(
+      ApiEndpoints.tags,
+      body: {'name': name, if (color != null) 'color': color},
+    );
+    return Tag.fromJson(dataMap(data));
   }
 
   Future<void> deleteTag(String id) async {

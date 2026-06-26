@@ -121,43 +121,103 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       ),
       body: Column(
         children: [
+          // Clean, borderless title at the top.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+            child: TextField(
+              controller: _titleController,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.3,
+              ),
+              decoration: InputDecoration(
+                hintText: 'Title',
+                border: InputBorder.none,
+                isDense: true,
+                fillColor: Colors.transparent,
+                filled: false,
+                hintStyle: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ),
           if (_loadFailed)
             Container(
               width: double.infinity,
-              color: Theme.of(context).colorScheme.errorContainer,
+              margin: const EdgeInsets.fromLTRB(16, 4, 16, 0),
               padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Text(
                 "This note's content can't be opened for editing here, so the "
                 'body is locked to protect it. You can still rename it, or edit '
                 'the content on the web app.',
                 style: TextStyle(
+                  fontSize: 13,
                   color: Theme.of(context).colorScheme.onErrorContainer,
                 ),
               ),
             ),
-          if (!_loadFailed)
-            QuillSimpleToolbar(
-              controller: _quillController,
-              config: const QuillSimpleToolbarConfig(),
-            ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: TextField(
-              controller: _titleController,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              decoration: const InputDecoration(hintText: 'Title', border: InputBorder.none),
-            ),
-          ),
-          const Divider(height: 1, thickness: 1),
+          const Divider(height: 17, thickness: 1),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: QuillEditor.basic(
                 controller: _quillController,
                 config: const QuillEditorConfig(placeholder: 'Start writing...'),
               ),
             ),
           ),
+          // Slim, essentials-only toolbar pinned above the keyboard.
+          if (!_loadFailed)
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
+                border: Border(
+                  top: BorderSide(color: Theme.of(context).colorScheme.outline),
+                ),
+              ),
+              child: SafeArea(
+                top: false,
+                child: QuillSimpleToolbar(
+                  controller: _quillController,
+                  config: const QuillSimpleToolbarConfig(
+                    multiRowsDisplay: false,
+                    showFontFamily: false,
+                    showFontSize: false,
+                    showSubscript: false,
+                    showSuperscript: false,
+                    showInlineCode: false,
+                    showColorButton: false,
+                    showBackgroundColorButton: false,
+                    showClearFormat: false,
+                    showCodeBlock: false,
+                    showSearchButton: false,
+                    showIndent: false,
+                    showStrikeThrough: false,
+                    showAlignmentButtons: false,
+                    showDividers: false,
+                    showUndo: true,
+                    showRedo: true,
+                    showBoldButton: true,
+                    showItalicButton: true,
+                    showUnderLineButton: true,
+                    showHeaderStyle: true,
+                    showListNumbers: true,
+                    showListBullets: true,
+                    showListCheck: true,
+                    showQuote: true,
+                    showLink: true,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

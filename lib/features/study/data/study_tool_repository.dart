@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
+import '../../../core/api/api_parse.dart';
 import '../../../models/study_tool_generation.dart';
 import 'ai_client.dart';
 
@@ -23,21 +24,18 @@ class StudyToolRepository {
     String noteId, {
     String? type,
   }) async {
-    final data =
-        await _api.get(
-              ApiEndpoints.noteStudyTools(noteId),
-              params: {if (type != null) 'type': type},
-            )
-            as Map<String, dynamic>;
-    return (data['data'] as List)
+    final data = await _api.get(
+      ApiEndpoints.noteStudyTools(noteId),
+      params: {if (type != null) 'type': type},
+    );
+    return dataList(data)
         .map((e) => StudyToolGeneration.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 
   Future<StudyToolGeneration> getGeneration(String id) async {
-    final data =
-        await _api.get(ApiEndpoints.studyTool(id)) as Map<String, dynamic>;
-    return StudyToolGeneration.fromJson(data['data'] as Map<String, dynamic>);
+    final data = await _api.get(ApiEndpoints.studyTool(id));
+    return StudyToolGeneration.fromJson(dataMap(data));
   }
 
   /// Generates content via the Next.js AI endpoint, then persists the result
@@ -55,17 +53,15 @@ class StudyToolRepository {
       options: options,
     );
 
-    final data =
-        await _api.post(
-              ApiEndpoints.noteStudyTools(noteId),
-              body: {
-                'note_id': noteId,
-                'type': typeName,
-                'content': content,
-                'status': 'completed',
-              },
-            )
-            as Map<String, dynamic>;
-    return StudyToolGeneration.fromJson(data['data'] as Map<String, dynamic>);
+    final data = await _api.post(
+      ApiEndpoints.noteStudyTools(noteId),
+      body: {
+        'note_id': noteId,
+        'type': typeName,
+        'content': content,
+        'status': 'completed',
+      },
+    );
+    return StudyToolGeneration.fromJson(dataMap(data));
   }
 }

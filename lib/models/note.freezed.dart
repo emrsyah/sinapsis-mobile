@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Note {
 
- String get id;@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'folder_id') String? get folderId; String get title; String? get content;@JsonKey(name: 'is_published') bool get isPublished;@JsonKey(name: 'share_token') String? get shareToken;@JsonKey(name: 'deleted_at') String? get deletedAt;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt; List<Tag> get tags; List<Note> get backlinks;
+ String get id;@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'folder_id') String? get folderId; String get title; String? get content;@JsonKey(name: 'is_pinned') bool get isPinned;@JsonKey(name: 'is_published') bool get isPublished;@JsonKey(name: 'share_token') String? get shareToken;@JsonKey(name: 'deleted_at') String? get deletedAt;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt; List<Tag> get tags; List<Note> get backlinks;
 /// Create a copy of Note
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $NoteCopyWith<Note> get copyWith => _$NoteCopyWithImpl<Note>(this as Note, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Note&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.folderId, folderId) || other.folderId == folderId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.isPublished, isPublished) || other.isPublished == isPublished)&&(identical(other.shareToken, shareToken) || other.shareToken == shareToken)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.tags, tags)&&const DeepCollectionEquality().equals(other.backlinks, backlinks));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Note&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.folderId, folderId) || other.folderId == folderId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.isPinned, isPinned) || other.isPinned == isPinned)&&(identical(other.isPublished, isPublished) || other.isPublished == isPublished)&&(identical(other.shareToken, shareToken) || other.shareToken == shareToken)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.tags, tags)&&const DeepCollectionEquality().equals(other.backlinks, backlinks));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,folderId,title,content,isPublished,shareToken,deletedAt,createdAt,updatedAt,const DeepCollectionEquality().hash(tags),const DeepCollectionEquality().hash(backlinks));
+int get hashCode => Object.hash(runtimeType,id,userId,folderId,title,content,isPinned,isPublished,shareToken,deletedAt,createdAt,updatedAt,const DeepCollectionEquality().hash(tags),const DeepCollectionEquality().hash(backlinks));
 
 @override
 String toString() {
-  return 'Note(id: $id, userId: $userId, folderId: $folderId, title: $title, content: $content, isPublished: $isPublished, shareToken: $shareToken, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt, tags: $tags, backlinks: $backlinks)';
+  return 'Note(id: $id, userId: $userId, folderId: $folderId, title: $title, content: $content, isPinned: $isPinned, isPublished: $isPublished, shareToken: $shareToken, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt, tags: $tags, backlinks: $backlinks)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $NoteCopyWith<$Res>  {
   factory $NoteCopyWith(Note value, $Res Function(Note) _then) = _$NoteCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'folder_id') String? folderId, String title, String? content,@JsonKey(name: 'is_published') bool isPublished,@JsonKey(name: 'share_token') String? shareToken,@JsonKey(name: 'deleted_at') String? deletedAt,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt, List<Tag> tags, List<Note> backlinks
+ String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'folder_id') String? folderId, String title, String? content,@JsonKey(name: 'is_pinned') bool isPinned,@JsonKey(name: 'is_published') bool isPublished,@JsonKey(name: 'share_token') String? shareToken,@JsonKey(name: 'deleted_at') String? deletedAt,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt, List<Tag> tags, List<Note> backlinks
 });
 
 
@@ -65,14 +65,15 @@ class _$NoteCopyWithImpl<$Res>
 
 /// Create a copy of Note
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? folderId = freezed,Object? title = null,Object? content = freezed,Object? isPublished = null,Object? shareToken = freezed,Object? deletedAt = freezed,Object? createdAt = null,Object? updatedAt = null,Object? tags = null,Object? backlinks = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? folderId = freezed,Object? title = null,Object? content = freezed,Object? isPinned = null,Object? isPublished = null,Object? shareToken = freezed,Object? deletedAt = freezed,Object? createdAt = null,Object? updatedAt = null,Object? tags = null,Object? backlinks = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,folderId: freezed == folderId ? _self.folderId : folderId // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: freezed == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String?,isPublished: null == isPublished ? _self.isPublished : isPublished // ignore: cast_nullable_to_non_nullable
+as String?,isPinned: null == isPinned ? _self.isPinned : isPinned // ignore: cast_nullable_to_non_nullable
+as bool,isPublished: null == isPublished ? _self.isPublished : isPublished // ignore: cast_nullable_to_non_nullable
 as bool,shareToken: freezed == shareToken ? _self.shareToken : shareToken // ignore: cast_nullable_to_non_nullable
 as String?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
@@ -164,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'folder_id')  String? folderId,  String title,  String? content, @JsonKey(name: 'is_published')  bool isPublished, @JsonKey(name: 'share_token')  String? shareToken, @JsonKey(name: 'deleted_at')  String? deletedAt, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt,  List<Tag> tags,  List<Note> backlinks)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'folder_id')  String? folderId,  String title,  String? content, @JsonKey(name: 'is_pinned')  bool isPinned, @JsonKey(name: 'is_published')  bool isPublished, @JsonKey(name: 'share_token')  String? shareToken, @JsonKey(name: 'deleted_at')  String? deletedAt, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt,  List<Tag> tags,  List<Note> backlinks)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Note() when $default != null:
-return $default(_that.id,_that.userId,_that.folderId,_that.title,_that.content,_that.isPublished,_that.shareToken,_that.deletedAt,_that.createdAt,_that.updatedAt,_that.tags,_that.backlinks);case _:
+return $default(_that.id,_that.userId,_that.folderId,_that.title,_that.content,_that.isPinned,_that.isPublished,_that.shareToken,_that.deletedAt,_that.createdAt,_that.updatedAt,_that.tags,_that.backlinks);case _:
   return orElse();
 
 }
@@ -185,10 +186,10 @@ return $default(_that.id,_that.userId,_that.folderId,_that.title,_that.content,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'folder_id')  String? folderId,  String title,  String? content, @JsonKey(name: 'is_published')  bool isPublished, @JsonKey(name: 'share_token')  String? shareToken, @JsonKey(name: 'deleted_at')  String? deletedAt, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt,  List<Tag> tags,  List<Note> backlinks)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'folder_id')  String? folderId,  String title,  String? content, @JsonKey(name: 'is_pinned')  bool isPinned, @JsonKey(name: 'is_published')  bool isPublished, @JsonKey(name: 'share_token')  String? shareToken, @JsonKey(name: 'deleted_at')  String? deletedAt, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt,  List<Tag> tags,  List<Note> backlinks)  $default,) {final _that = this;
 switch (_that) {
 case _Note():
-return $default(_that.id,_that.userId,_that.folderId,_that.title,_that.content,_that.isPublished,_that.shareToken,_that.deletedAt,_that.createdAt,_that.updatedAt,_that.tags,_that.backlinks);case _:
+return $default(_that.id,_that.userId,_that.folderId,_that.title,_that.content,_that.isPinned,_that.isPublished,_that.shareToken,_that.deletedAt,_that.createdAt,_that.updatedAt,_that.tags,_that.backlinks);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +206,10 @@ return $default(_that.id,_that.userId,_that.folderId,_that.title,_that.content,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'folder_id')  String? folderId,  String title,  String? content, @JsonKey(name: 'is_published')  bool isPublished, @JsonKey(name: 'share_token')  String? shareToken, @JsonKey(name: 'deleted_at')  String? deletedAt, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt,  List<Tag> tags,  List<Note> backlinks)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'folder_id')  String? folderId,  String title,  String? content, @JsonKey(name: 'is_pinned')  bool isPinned, @JsonKey(name: 'is_published')  bool isPublished, @JsonKey(name: 'share_token')  String? shareToken, @JsonKey(name: 'deleted_at')  String? deletedAt, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt,  List<Tag> tags,  List<Note> backlinks)?  $default,) {final _that = this;
 switch (_that) {
 case _Note() when $default != null:
-return $default(_that.id,_that.userId,_that.folderId,_that.title,_that.content,_that.isPublished,_that.shareToken,_that.deletedAt,_that.createdAt,_that.updatedAt,_that.tags,_that.backlinks);case _:
+return $default(_that.id,_that.userId,_that.folderId,_that.title,_that.content,_that.isPinned,_that.isPublished,_that.shareToken,_that.deletedAt,_that.createdAt,_that.updatedAt,_that.tags,_that.backlinks);case _:
   return null;
 
 }
@@ -220,7 +221,7 @@ return $default(_that.id,_that.userId,_that.folderId,_that.title,_that.content,_
 @JsonSerializable()
 
 class _Note implements Note {
-  const _Note({required this.id, @JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'folder_id') this.folderId, required this.title, this.content, @JsonKey(name: 'is_published') this.isPublished = false, @JsonKey(name: 'share_token') this.shareToken, @JsonKey(name: 'deleted_at') this.deletedAt, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt, final  List<Tag> tags = const [], final  List<Note> backlinks = const []}): _tags = tags,_backlinks = backlinks;
+  const _Note({required this.id, @JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'folder_id') this.folderId, required this.title, this.content, @JsonKey(name: 'is_pinned') this.isPinned = false, @JsonKey(name: 'is_published') this.isPublished = false, @JsonKey(name: 'share_token') this.shareToken, @JsonKey(name: 'deleted_at') this.deletedAt, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt, final  List<Tag> tags = const [], final  List<Note> backlinks = const []}): _tags = tags,_backlinks = backlinks;
   factory _Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
 
 @override final  String id;
@@ -228,6 +229,7 @@ class _Note implements Note {
 @override@JsonKey(name: 'folder_id') final  String? folderId;
 @override final  String title;
 @override final  String? content;
+@override@JsonKey(name: 'is_pinned') final  bool isPinned;
 @override@JsonKey(name: 'is_published') final  bool isPublished;
 @override@JsonKey(name: 'share_token') final  String? shareToken;
 @override@JsonKey(name: 'deleted_at') final  String? deletedAt;
@@ -261,16 +263,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Note&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.folderId, folderId) || other.folderId == folderId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.isPublished, isPublished) || other.isPublished == isPublished)&&(identical(other.shareToken, shareToken) || other.shareToken == shareToken)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._tags, _tags)&&const DeepCollectionEquality().equals(other._backlinks, _backlinks));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Note&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.folderId, folderId) || other.folderId == folderId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.isPinned, isPinned) || other.isPinned == isPinned)&&(identical(other.isPublished, isPublished) || other.isPublished == isPublished)&&(identical(other.shareToken, shareToken) || other.shareToken == shareToken)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._tags, _tags)&&const DeepCollectionEquality().equals(other._backlinks, _backlinks));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,folderId,title,content,isPublished,shareToken,deletedAt,createdAt,updatedAt,const DeepCollectionEquality().hash(_tags),const DeepCollectionEquality().hash(_backlinks));
+int get hashCode => Object.hash(runtimeType,id,userId,folderId,title,content,isPinned,isPublished,shareToken,deletedAt,createdAt,updatedAt,const DeepCollectionEquality().hash(_tags),const DeepCollectionEquality().hash(_backlinks));
 
 @override
 String toString() {
-  return 'Note(id: $id, userId: $userId, folderId: $folderId, title: $title, content: $content, isPublished: $isPublished, shareToken: $shareToken, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt, tags: $tags, backlinks: $backlinks)';
+  return 'Note(id: $id, userId: $userId, folderId: $folderId, title: $title, content: $content, isPinned: $isPinned, isPublished: $isPublished, shareToken: $shareToken, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt, tags: $tags, backlinks: $backlinks)';
 }
 
 
@@ -281,7 +283,7 @@ abstract mixin class _$NoteCopyWith<$Res> implements $NoteCopyWith<$Res> {
   factory _$NoteCopyWith(_Note value, $Res Function(_Note) _then) = __$NoteCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'folder_id') String? folderId, String title, String? content,@JsonKey(name: 'is_published') bool isPublished,@JsonKey(name: 'share_token') String? shareToken,@JsonKey(name: 'deleted_at') String? deletedAt,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt, List<Tag> tags, List<Note> backlinks
+ String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'folder_id') String? folderId, String title, String? content,@JsonKey(name: 'is_pinned') bool isPinned,@JsonKey(name: 'is_published') bool isPublished,@JsonKey(name: 'share_token') String? shareToken,@JsonKey(name: 'deleted_at') String? deletedAt,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt, List<Tag> tags, List<Note> backlinks
 });
 
 
@@ -298,14 +300,15 @@ class __$NoteCopyWithImpl<$Res>
 
 /// Create a copy of Note
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? folderId = freezed,Object? title = null,Object? content = freezed,Object? isPublished = null,Object? shareToken = freezed,Object? deletedAt = freezed,Object? createdAt = null,Object? updatedAt = null,Object? tags = null,Object? backlinks = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? folderId = freezed,Object? title = null,Object? content = freezed,Object? isPinned = null,Object? isPublished = null,Object? shareToken = freezed,Object? deletedAt = freezed,Object? createdAt = null,Object? updatedAt = null,Object? tags = null,Object? backlinks = null,}) {
   return _then(_Note(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,folderId: freezed == folderId ? _self.folderId : folderId // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: freezed == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String?,isPublished: null == isPublished ? _self.isPublished : isPublished // ignore: cast_nullable_to_non_nullable
+as String?,isPinned: null == isPinned ? _self.isPinned : isPinned // ignore: cast_nullable_to_non_nullable
+as bool,isPublished: null == isPublished ? _self.isPublished : isPublished // ignore: cast_nullable_to_non_nullable
 as bool,shareToken: freezed == shareToken ? _self.shareToken : shareToken // ignore: cast_nullable_to_non_nullable
 as String?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable

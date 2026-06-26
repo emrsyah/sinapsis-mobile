@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Tag {
 
- String get id;@JsonKey(name: 'user_id') String get userId; String get name; String? get color;@JsonKey(name: 'created_at') String get createdAt;
+ String get id;@JsonKey(name: 'user_id') String get userId; String get name; String? get color;// Backend TagData.created_at is nullable (?string, no fallback), so this
+// must be nullable too or parsing a tag with a null timestamp throws.
+@JsonKey(name: 'created_at') String? get createdAt;
 /// Create a copy of Tag
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +50,7 @@ abstract mixin class $TagCopyWith<$Res>  {
   factory $TagCopyWith(Tag value, $Res Function(Tag) _then) = _$TagCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId, String name, String? color,@JsonKey(name: 'created_at') String createdAt
+ String id,@JsonKey(name: 'user_id') String userId, String name, String? color,@JsonKey(name: 'created_at') String? createdAt
 });
 
 
@@ -65,14 +67,14 @@ class _$TagCopyWithImpl<$Res>
 
 /// Create a copy of Tag
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? name = null,Object? color = freezed,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? name = null,Object? color = freezed,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String,
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -157,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String name,  String? color, @JsonKey(name: 'created_at')  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String name,  String? color, @JsonKey(name: 'created_at')  String? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Tag() when $default != null:
 return $default(_that.id,_that.userId,_that.name,_that.color,_that.createdAt);case _:
@@ -178,7 +180,7 @@ return $default(_that.id,_that.userId,_that.name,_that.color,_that.createdAt);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String name,  String? color, @JsonKey(name: 'created_at')  String createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String name,  String? color, @JsonKey(name: 'created_at')  String? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Tag():
 return $default(_that.id,_that.userId,_that.name,_that.color,_that.createdAt);case _:
@@ -198,7 +200,7 @@ return $default(_that.id,_that.userId,_that.name,_that.color,_that.createdAt);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId,  String name,  String? color, @JsonKey(name: 'created_at')  String createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId,  String name,  String? color, @JsonKey(name: 'created_at')  String? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Tag() when $default != null:
 return $default(_that.id,_that.userId,_that.name,_that.color,_that.createdAt);case _:
@@ -213,14 +215,16 @@ return $default(_that.id,_that.userId,_that.name,_that.color,_that.createdAt);ca
 @JsonSerializable()
 
 class _Tag implements Tag {
-  const _Tag({required this.id, @JsonKey(name: 'user_id') required this.userId, required this.name, this.color, @JsonKey(name: 'created_at') required this.createdAt});
+  const _Tag({required this.id, @JsonKey(name: 'user_id') required this.userId, required this.name, this.color, @JsonKey(name: 'created_at') this.createdAt});
   factory _Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 
 @override final  String id;
 @override@JsonKey(name: 'user_id') final  String userId;
 @override final  String name;
 @override final  String? color;
-@override@JsonKey(name: 'created_at') final  String createdAt;
+// Backend TagData.created_at is nullable (?string, no fallback), so this
+// must be nullable too or parsing a tag with a null timestamp throws.
+@override@JsonKey(name: 'created_at') final  String? createdAt;
 
 /// Create a copy of Tag
 /// with the given fields replaced by the non-null parameter values.
@@ -255,7 +259,7 @@ abstract mixin class _$TagCopyWith<$Res> implements $TagCopyWith<$Res> {
   factory _$TagCopyWith(_Tag value, $Res Function(_Tag) _then) = __$TagCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId, String name, String? color,@JsonKey(name: 'created_at') String createdAt
+ String id,@JsonKey(name: 'user_id') String userId, String name, String? color,@JsonKey(name: 'created_at') String? createdAt
 });
 
 
@@ -272,14 +276,14 @@ class __$TagCopyWithImpl<$Res>
 
 /// Create a copy of Tag
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? name = null,Object? color = freezed,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? name = null,Object? color = freezed,Object? createdAt = freezed,}) {
   return _then(_Tag(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String,
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

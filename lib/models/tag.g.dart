@@ -11,7 +11,7 @@ _Tag _$TagFromJson(Map<String, dynamic> json) => _Tag(
   userId: json['user_id'] as String,
   name: json['name'] as String,
   color: json['color'] as String?,
-  createdAt: json['created_at'] as String,
+  createdAt: json['created_at'] as String?,
 );
 
 Map<String, dynamic> _$TagToJson(_Tag instance) => <String, dynamic>{
