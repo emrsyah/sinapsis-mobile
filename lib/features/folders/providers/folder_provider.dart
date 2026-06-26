@@ -18,6 +18,11 @@ class FolderListNotifier extends _$FolderListNotifier {
     ref.invalidateSelf();
   }
 
+  Future<void> renameFolder(String id, String name) async {
+    await ref.read(folderRepositoryProvider).updateFolder(id, name: name);
+    ref.invalidateSelf();
+  }
+
   Future<void> deleteFolder(String id) async {
     await ref.read(folderRepositoryProvider).deleteFolder(id);
     ref.invalidateSelf();

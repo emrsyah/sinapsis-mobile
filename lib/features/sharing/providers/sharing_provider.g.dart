@@ -20,7 +20,7 @@ final class SharingControllerProvider
         argument: null,
         retry: null,
         name: r'sharingControllerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -41,7 +41,7 @@ final class SharingControllerProvider
   }
 }
 
-String _$sharingControllerHash() => r'7aae69ddb7d6c5de44dc09766e8e04b943625f63';
+String _$sharingControllerHash() => r'0b731c52f7261c83610fb4b3bbea6b88dc0f2adb';
 
 abstract class _$SharingController extends $Notifier<void> {
   void build();

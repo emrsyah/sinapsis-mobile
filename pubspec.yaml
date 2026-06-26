@@ -45,6 +45,23 @@ dev_dependencies:
   freezed: ^3.2.3
   json_serializable: ^6.9.0
   riverpod_generator: ^4.0.0+1
+  flutter_launcher_icons: ^0.14.4
+
+# App launcher icon — Sinapsis brand (mint #34D399 + open-book mark).
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
+  image_path_ios: "assets/icon/icon_ios.png"
+  remove_alpha_ios: true
+  min_sdk_android: 21
+  adaptive_icon_background: "#34D399"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#000000"
+    theme_color: "#34D399"
 
 flutter:
   uses-material-design: true

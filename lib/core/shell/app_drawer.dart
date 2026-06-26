@@ -5,6 +5,7 @@ import '../../features/auth/providers/auth_provider.dart';
 import '../../features/folders/providers/folder_provider.dart';
 import '../../features/notes/providers/note_provider.dart';
 import '../../features/tags/providers/tag_provider.dart';
+import '../../models/folder.dart';
 import '../../models/note.dart';
 import '../ui/ui_helpers.dart';
 
@@ -87,8 +88,22 @@ class AppDrawer extends ConsumerWidget {
                     selected: current == '/search',
                     onTap: () => go('/search'),
                   ),
-                  if (folders.isNotEmpty) ...[
-                    const _SectionLabel('NOTES'),
+                  _SectionLabel(
+                    'NOTES',
+                    onAdd: () => _createFolderDialog(context, ref),
+                  ),
+                  if (folders.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                      child: Text(
+                        'No folders yet — tap + to add one',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    )
+                  else
                     ...folders.map((f) {
                       final count =
                           notes.where((n) => n.folderId == f.id).length;
@@ -98,9 +113,9 @@ class AppDrawer extends ConsumerWidget {
                         count: count,
                         selected: current == '/folder/${f.id}',
                         onTap: () => go('/folder/${f.id}'),
+                        onLongPress: () => _folderActions(context, ref, f),
                       );
                     }),
-                  ],
                   const _SectionLabel('TAGS'),
                   if (tags.isEmpty)
                     Padding(
@@ -167,20 +182,33 @@ Color? _hexColor(String hex) {
 
 class _SectionLabel extends StatelessWidget {
   final String text;
-  const _SectionLabel(this.text);
+  final VoidCallback? onAdd;
+  const _SectionLabel(this.text, {this.onAdd});
 
   @override
   Widget build(BuildContext context) {
+    final muted = Theme.of(context).colorScheme.onSurfaceVariant;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 18, 16, 8),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.8,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
+      padding: EdgeInsets.fromLTRB(16, 18, onAdd == null ? 16 : 4, 8),
+      child: Row(
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.8,
+              color: muted,
+            ),
+          ),
+          const Spacer(),
+          if (onAdd != null)
+            InkResponse(
+              onTap: onAdd,
+              radius: 18,
+              child: Icon(Icons.add, size: 18, color: muted),
+            ),
+        ],
       ),
     );
   }
@@ -221,12 +249,14 @@ class _DotTile extends StatelessWidget {
   final int count;
   final bool selected;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
   const _DotTile({
     required this.color,
     required this.label,
     required this.count,
     required this.selected,
     required this.onTap,
+    this.onLongPress,
   });
 
   @override
@@ -251,6 +281,126 @@ class _DotTile extends StatelessWidget {
       selectedTileColor: scheme.surfaceContainerHigh,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       onTap: onTap,
+      onLongPress: onLongPress,
     );
   }
+}
+
+// ── Folder management ──────────────────────────────────────────────────────
+
+Future<String?> _folderNameDialog(
+  BuildContext context, {
+  required String title,
+  String? initial,
+}) {
+  final controller = TextEditingController(text: initial ?? '');
+  return showDialog<String>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(title),
+      content: TextField(
+        controller: controller,
+        autofocus: true,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: const InputDecoration(hintText: 'Folder name'),
+        onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(ctx),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+          child: const Text('Save'),
+        ),
+      ],
+    ),
+  );
+}
+
+Future<void> _createFolderDialog(BuildContext context, WidgetRef ref) async {
+  final name = await _folderNameDialog(context, title: 'New folder');
+  if (name == null || name.isEmpty) return;
+  await ref.read(folderListProvider.notifier).createFolder(name);
+}
+
+Future<void> _renameFolderDialog(
+  BuildContext context,
+  WidgetRef ref,
+  Folder folder,
+) async {
+  final name = await _folderNameDialog(
+    context,
+    title: 'Rename folder',
+    initial: folder.name,
+  );
+  if (name == null || name.isEmpty || name == folder.name) return;
+  await ref.read(folderListProvider.notifier).renameFolder(folder.id, name);
+}
+
+Future<void> _confirmDeleteFolder(
+  BuildContext context,
+  WidgetRef ref,
+  Folder folder,
+) async {
+  final ok = await showDialog<bool>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text('Delete folder?'),
+      content: Text(
+        '"${folder.name}" will be deleted. Notes inside are kept (they just '
+        'lose this folder).',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(ctx, false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(ctx, true),
+          child: const Text('Delete', style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    ),
+  );
+  if (ok == true) {
+    await ref.read(folderListProvider.notifier).deleteFolder(folder.id);
+  }
+}
+
+Future<void> _folderActions(
+  BuildContext context,
+  WidgetRef ref,
+  Folder folder,
+) {
+  return showModalBottomSheet<void>(
+    context: context,
+    builder: (ctx) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.drive_file_rename_outline),
+            title: const Text('Rename folder'),
+            onTap: () {
+              Navigator.pop(ctx);
+              _renameFolderDialog(context, ref, folder);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.delete_outline, color: Colors.red),
+            title: const Text(
+              'Delete folder',
+              style: TextStyle(color: Colors.red),
+            ),
+            onTap: () {
+              Navigator.pop(ctx);
+              _confirmDeleteFolder(context, ref, folder);
+            },
+          ),
+        ],
+      ),
+    ),
+  );
 }

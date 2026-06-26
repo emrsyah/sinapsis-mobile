@@ -5,7 +5,10 @@ import '../data/sharing_repository.dart';
 
 part 'sharing_provider.g.dart';
 
-@riverpod
+// keepAlive: this is a stateless action controller invoked via `ref.read`
+// (never watched), so without keepAlive it would be auto-disposed mid-publish,
+// and the post-await `ref.invalidate` would throw "used after disposed".
+@Riverpod(keepAlive: true)
 class SharingController extends _$SharingController {
   @override
   void build() {}
