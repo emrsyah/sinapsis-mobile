@@ -13,10 +13,15 @@ class AiClient {
   late final Dio _dio;
 
   AiClient() {
+    final secret = AppConstants.aiProxySecret;
     _dio = Dio(
       BaseOptions(
         baseUrl: AppConstants.aiBaseUrl,
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          // Sent only when configured; matches the Next.js AI_PROXY_SECRET.
+          if (secret.isNotEmpty) 'Authorization': 'Bearer $secret',
+        },
         connectTimeout: const Duration(seconds: 15),
         // Generation can be slow; allow plenty of headroom.
         receiveTimeout: const Duration(seconds: 90),

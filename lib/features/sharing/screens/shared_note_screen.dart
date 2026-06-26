@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/editor/note_text.dart';
+import '../../../core/editor/content_converter.dart';
 import '../../tags/widgets/tag_chip.dart';
 import '../providers/sharing_provider.dart';
 
@@ -76,28 +75,16 @@ class _SharedContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final raw = content?.trim() ?? '';
-    // Render rich content when it is Quill Delta JSON; otherwise fall back to
-    // plain text (e.g. HTML authored on web).
-    if (raw.startsWith('[') || raw.startsWith('{')) {
-      try {
-        final decoded = jsonDecode(raw);
-        final doc = Document.fromJson(
-          decoded is List ? decoded : (decoded['ops'] as List),
-        );
-        final controller = QuillController(
-          document: doc,
-          selection: const TextSelection.collapsed(offset: 0),
-          readOnly: true,
-        );
-        return QuillEditor.basic(
-          controller: controller,
-          config: const QuillEditorConfig(showCursor: false),
-        );
-      } catch (_) {
-        // fall through
-      }
-    }
-    return Text(noteContentToPlainText(content));
+    // Renders both web-authored HTML and legacy Quill Delta JSON as rich text.
+    final doc = ContentConverter.documentFromStored(content);
+    final controller = QuillController(
+      document: doc,
+      selection: const TextSelection.collapsed(offset: 0),
+      readOnly: true,
+    );
+    return QuillEditor.basic(
+      controller: controller,
+      config: const QuillEditorConfig(showCursor: false),
+    );
   }
 }

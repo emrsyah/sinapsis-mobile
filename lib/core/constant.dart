@@ -18,6 +18,11 @@ class AppConstants {
   static String get webBaseUrl =>
       dotenv.env['WEB_BASE_URL'] ?? 'http://localhost:3000';
 
+  /// Optional shared secret for the AI proxy routes. When set (and matching the
+  /// Next.js `AI_PROXY_SECRET`), it is sent as a Bearer token so the
+  /// OpenRouter-backed routes reject unauthenticated callers. Empty in dev.
+  static String get aiProxySecret => dotenv.env['AI_PROXY_SECRET'] ?? '';
+
   static String get reverbWsUrl =>
       dotenv.env['REVERB_WS_URL'] ?? 'wss://api.sinapsis.app';
 

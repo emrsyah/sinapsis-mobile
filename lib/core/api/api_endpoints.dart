@@ -24,7 +24,9 @@ class ApiEndpoints {
       '/notes/$id/links/$target';
   static String noteAttachments(String id) => '/notes/$id/attachments';
   static String noteStudyTools(String id) => '/notes/$id/study-tools';
-  static String noteTagsUrl(String id) => '/notes/$id/tags';
+  // Backend expects the tag id in the path: POST/DELETE /notes/{note}/tags/{tag}
+  static String noteTagAttach(String id, String tagId) =>
+      '/notes/$id/tags/$tagId';
   static String noteTagDetach(String id, String tagId) =>
       '/notes/$id/tags/$tagId';
 

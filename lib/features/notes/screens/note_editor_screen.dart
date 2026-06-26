@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/note_provider.dart';
+import '../../../core/editor/content_converter.dart';
 
 import '../data/note_repository.dart';
 class NoteEditorScreen extends ConsumerStatefulWidget {
@@ -26,6 +26,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   late QuillController _quillController;
   late TextEditingController _titleController;
   bool _isSaving = false;
+  // True when the note's stored content couldn't be parsed on this client.
+  // We then keep the original content untouched on save (title-only edits).
+  bool _loadFailed = false;
 
   @override
   void initState() {
@@ -33,21 +36,16 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     // Inisialisasi Judul dengan data lama jika ada
     _titleController = TextEditingController(text: widget.initialTitle ?? '');
 
-    // Inisialisasi Konten Quill dengan data JSON lama jika ada
-    if (widget.initialContent != null && widget.initialContent!.isNotEmpty) {
-      try {
-        final doc = Document.fromJson(jsonDecode(widget.initialContent!));
-        _quillController = QuillController(
-          document: doc,
-          selection: const TextSelection.collapsed(offset: 0),
-        );
-      } catch (e) {
-        // Fallback jika format JSON bermasalah
-        _quillController = QuillController.basic();
-      }
-    } else {
-      _quillController = QuillController.basic();
-    }
+    // Muat konten: HTML (web/Tiptap) atau Delta JSON lama (mobile) -> Document.
+    final parsed = ContentConverter.parse(widget.initialContent);
+    _loadFailed = parsed.failed;
+    _quillController = QuillController(
+      document: parsed.document,
+      selection: const TextSelection.collapsed(offset: 0),
+      // Lock the body when we couldn't parse it, so the user can't type into an
+      // empty editor and unknowingly overwrite the real (unreadable) content.
+      readOnly: _loadFailed,
+    );
   }
 
   @override
@@ -69,15 +67,19 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     setState(() => _isSaving = true);
 
     try {
-      // Ubah dokumen dokumen Quill menjadi string JSON Delta
-      final contentJson = jsonEncode(_quillController.document.toDelta().toJson());
-      
-      // SINKRONISASI DISINI: 
+      // Simpan sebagai HTML (format kanonik, sama dengan web/Tiptap).
+      // Jika konten gagal di-parse saat dibuka, JANGAN menimpa body asli —
+      // kirim ulang konten asli apa adanya agar hanya judul yang berubah.
+      final contentHtml = _loadFailed
+          ? (widget.initialContent ?? '')
+          : ContentConverter.documentToHtml(_quillController.document);
+
+      // SINKRONISASI DISINI:
       // Panggil updateNote sesuai positional id, diikuti named parameters title dan content
       await ref.read(noteRepositoryProvider).updateNote(
         widget.noteId, // Positional parameter id
         title: title,   // Named parameter title
-        content: contentJson, // Named parameter content
+        content: contentHtml, // Named parameter content
       );
 
       // Paksa noteDetailProvider melakukan fetch ulang data dari backend
@@ -88,7 +90,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
           const SnackBar(content: Text('Catatan berhasil diperbarui!')),
         );
         // Kembali ke layar viewer sambil membawa data terbaru
-        Navigator.pop(context, {'title': title, 'content': contentJson});
+        Navigator.pop(context, {'title': title, 'content': contentHtml});
       }
     } catch (e) {
       if (mounted) {
@@ -119,10 +121,25 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       ),
       body: Column(
         children: [
-          QuillSimpleToolbar(
-            controller: _quillController,
-            config: const QuillSimpleToolbarConfig(),
-          ),
+          if (_loadFailed)
+            Container(
+              width: double.infinity,
+              color: Theme.of(context).colorScheme.errorContainer,
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                "This note's content can't be opened for editing here, so the "
+                'body is locked to protect it. You can still rename it, or edit '
+                'the content on the web app.',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onErrorContainer,
+                ),
+              ),
+            ),
+          if (!_loadFailed)
+            QuillSimpleToolbar(
+              controller: _quillController,
+              config: const QuillSimpleToolbarConfig(),
+            ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: TextField(

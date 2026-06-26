@@ -1,10 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 // 1. Import file provider asli kamu (sesuaikan path foldernya)
 import '../providers/note_provider.dart';
+import '../../../core/editor/content_converter.dart';
 import 'note_editor_screen.dart';
 import '../../tags/widgets/tag_chip.dart';
 import '../../tags/widgets/tag_selector_sheet.dart';
@@ -26,17 +26,14 @@ class _NoteViewerScreenState extends ConsumerState<NoteViewerScreen> {
   void _setupQuillController(String title, String? contentJson) {
     if (_quillController == null) {
       _loadedTitle = title;
-      _loadedContentJson = contentJson ?? '[]';
-      
-      try {
-        final doc = Document.fromJson(jsonDecode(_loadedContentJson!));
-        _quillController = QuillController(
-          document: doc,
-          selection: const TextSelection.collapsed(offset: 0),
-        );
-      } catch (e) {
-        _quillController = QuillController.basic();
-      }
+      _loadedContentJson = contentJson ?? '';
+
+      final doc = ContentConverter.documentFromStored(_loadedContentJson);
+      _quillController = QuillController(
+        document: doc,
+        selection: const TextSelection.collapsed(offset: 0),
+        readOnly: true,
+      );
     }
   }
 
@@ -58,11 +55,12 @@ class _NoteViewerScreenState extends ConsumerState<NoteViewerScreen> {
       setState(() {
         _loadedTitle = result['title']!;
         _loadedContentJson = result['content']!;
-        
-        final doc = Document.fromJson(jsonDecode(_loadedContentJson!));
+
+        final doc = ContentConverter.documentFromStored(_loadedContentJson);
         _quillController = QuillController(
           document: doc,
           selection: const TextSelection.collapsed(offset: 0),
+          readOnly: true,
         );
       });
     }

@@ -36,7 +36,7 @@ class TagRepository {
   }
 
   Future<void> attachTag(String noteId, String tagId) async {
-    await _api.post(ApiEndpoints.noteTagsUrl(noteId), body: {'tag_id': tagId});
+    await _api.post(ApiEndpoints.noteTagAttach(noteId, tagId));
   }
 
   Future<void> detachTag(String noteId, String tagId) async {
